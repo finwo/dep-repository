@@ -1,0 +1,4 @@
+CC ?= $(shell which cc)
+SRC :=
+SRC += $(wildcard src/*.c)
+CFLAGS :=
