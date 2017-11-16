@@ -1,0 +1,2 @@
+tcpd:
+	$(CC) -O3 lib/cdeps/tcpd/src/main.c -o tcpd
