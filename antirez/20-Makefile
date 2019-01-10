@@ -1,0 +1,2 @@
+SRC += $(filter-out %test.c,$(wildcard lib/antirez/linenoise/*.c))
+CFLAGS += -Ilib/antirez/linenoise
