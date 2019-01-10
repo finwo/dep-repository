@@ -1,0 +1,2 @@
+SRC += $(filter-out %test.c,$(wildcard lib/cofyc/argparse/*.c))
+CFLAGS += -Ilib/cofyc/argparse
