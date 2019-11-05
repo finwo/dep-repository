@@ -1,2 +1,0 @@
-SRC += lib/clibs/sha1/sha1.c
-CFLAGS += -Ilib/clibs/sha1
