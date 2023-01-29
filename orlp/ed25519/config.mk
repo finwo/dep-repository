@@ -1,0 +1,10 @@
+# SRC+=__DIRNAME/src/add_scalar.c
+SRC+=__DIRNAME/src/fe.c
+SRC+=__DIRNAME/src/ge.c
+SRC+=__DIRNAME/src/key_exchange.c
+SRC+=__DIRNAME/src/keypair.c
+SRC+=__DIRNAME/src/sc.c
+SRC+=__DIRNAME/src/seed.c
+SRC+=__DIRNAME/src/sha512.c
+SRC+=__DIRNAME/src/sign.c
+SRC+=__DIRNAME/src/verify.c
