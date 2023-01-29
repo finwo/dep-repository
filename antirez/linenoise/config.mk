@@ -1,1 +1,1 @@
-SRC+=__DIRNAME__/linenoise.c
+SRC+=__DIRNAME/linenoise.c
