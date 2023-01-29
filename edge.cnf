@@ -3,3 +3,4 @@ antirez/rax=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/edge.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/edge.tar.gz
 finwo/matter=https://github.com/finwo/matter/archive/refs/tags/edge.tar.gz
+rxi/dyad=https://raw.githubusercontent.com/finwo/dep-repository/main/rxi/dyad/package.ini
