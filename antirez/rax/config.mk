@@ -1,1 +1,1 @@
-SRC+=__DIRNAME__/rax.c
+SRC+=__DIRNAME/rax.c
