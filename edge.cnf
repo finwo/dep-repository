@@ -2,3 +2,4 @@ antirez/linenoise=https://raw.githubusercontent.com/finwo/dep-repository/main/an
 antirez/rax=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/rax/package.ini
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/edge.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/edge.tar.gz
+finwo/matter=https://github.com/finwo/matter/archive/refs/tags/edge.tar.gz
