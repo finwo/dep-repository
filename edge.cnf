@@ -4,4 +4,5 @@ cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/edge.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/edge.tar.gz
 finwo/matter=https://github.com/finwo/matter/archive/refs/tags/edge.tar.gz
+orlp/ed25519=https://raw.githubusercontent.com/finwo/dep-repository/main/orlp/ed25519/package.ini
 rxi/dyad=https://raw.githubusercontent.com/finwo/dep-repository/main/rxi/dyad/package.ini
