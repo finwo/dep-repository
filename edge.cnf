@@ -1,5 +1,6 @@
 antirez/linenoise=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/linenoise/package.ini
 antirez/rax=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/rax/package.ini
+benhoyt/inih=https://raw.githubusercontent.com/finwo/dep-repository/main/benhoyt/inih/package-edge.ini
 cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc/argparse/package.ini
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/edge.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/edge.tar.gz
