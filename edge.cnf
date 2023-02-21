@@ -10,3 +10,4 @@ finwo/matter=https://github.com/finwo/matter/archive/refs/tags/edge.tar.gz
 orlp/ed25519=https://raw.githubusercontent.com/finwo/dep-repository/main/orlp/ed25519/package.ini
 rxi/dyad=https://raw.githubusercontent.com/finwo/dep-repository/main/rxi/dyad/package.ini
 sgtatham/coroutine=https://github.com/finwo/c-coroutine/archive/refs/tags/edge.tar.gz
+tidwall/btree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/btree/package.ini
