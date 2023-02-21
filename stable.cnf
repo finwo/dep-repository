@@ -1,8 +1,8 @@
-adamdunkels/protothreads=https://raw.githubusercontent.com/finwo/c-protothreads/stable/package.ini
+adamdunkels/protothreads=https://github.com/finwo/c-protothreads/archive/refs/tags/stable.tar.gz
 antirez/linenoise=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/linenoise/package.ini
 antirez/rax=https://raw.githubusercontent.com/finwo/dep-repository/main/antirez/rax/package.ini
 benhoyt/inih=https://raw.githubusercontent.com/finwo/dep-repository/main/benhoyt/inih/package-stable.ini
-cgraham/protothreads=https://raw.githubusercontent.com/finwo/c-protothreads/cgraham/package.ini
+cgraham/protothreads=https://github.com/finwo/c-protothreads/archive/refs/tags/cgraham.tar.gz
 cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc/argparse/package.ini
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/stable.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/stable.tar.gz
