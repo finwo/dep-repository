@@ -13,3 +13,4 @@ sgtatham/coroutine=https://github.com/finwo/c-coroutine/archive/refs/tags/edge.t
 tidwall/btree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/btree/package.ini
 tidwall/buf=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/buf/package.ini
 tidwall/hashmap=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/hashmap/package.ini
+tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rtree/package.ini
