@@ -14,4 +14,5 @@ tidwall/btree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwal
 tidwall/buf=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/buf/package.ini
 tidwall/evio=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/evio/package.ini
 tidwall/hashmap=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/hashmap/package.ini
+tidwall/match=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/match/package.ini
 tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rtree/package.ini
