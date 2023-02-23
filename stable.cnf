@@ -11,3 +11,4 @@ orlp/ed25519=https://raw.githubusercontent.com/finwo/dep-repository/main/orlp/ed
 rxi/dyad=https://raw.githubusercontent.com/finwo/dep-repository/main/rxi/dyad/package.ini
 sgtatham/coroutine=https://github.com/finwo/c-coroutine/archive/refs/tags/stable.tar.gz
 tidwall/btree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/btree/package.ini
+tidwall/buf=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/buf/package.ini
