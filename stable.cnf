@@ -5,6 +5,7 @@ benhoyt/inih=https://raw.githubusercontent.com/finwo/dep-repository/main/benhoyt
 cgraham/protothreads=https://github.com/finwo/c-protothreads/archive/refs/tags/cgraham.tar.gz
 cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc/argparse/package.ini
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/stable.tar.gz
+finwo/btree=https://github.com/finwo/c-btree/archive/refs/tags/stable.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/stable.tar.gz
 finwo/matter=https://github.com/finwo/matter/archive/refs/tags/stable.tar.gz
 orlp/ed25519=https://raw.githubusercontent.com/finwo/dep-repository/main/orlp/ed25519/package.ini
