@@ -1,1 +1,1 @@
-SRC+=__DIRNAME/hashmap.c
+SRC+=__DIRNAME/rtree.c
