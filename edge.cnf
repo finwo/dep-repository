@@ -20,3 +20,4 @@ tidwall/hashmap=https://raw.githubusercontent.com/finwo/dep-repository/main/tidw
 tidwall/match=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/match/package.ini
 tidwall/rand=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rand/package.ini
 tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rtree/package.ini
+webview/webview=https://raw.githubusercontent.com/finwo/dep-repository/main/webview/webview/package.ini
