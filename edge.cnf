@@ -7,6 +7,7 @@ cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/edge.tar.gz
 finwo/benchmark=https://github.com/finwo/c-benchmark/archive/refs/tags/edge.tar.gz
 finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/edge.tar.gz
+finwo/http-server=https://github.com/finwo/http-server/archive/refs/tags/edge.tar.gz
 finwo/matter=https://github.com/finwo/matter/archive/refs/tags/edge.tar.gz
 finwo/mindex=https://github.com/finwo/c-mindex/archive/refs/tags/edge.tar.gz
 kgabis/parson=https://raw.githubusercontent.com/finwo/dep-repository/main/kgabis/parson/package.ini
