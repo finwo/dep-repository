@@ -11,6 +11,7 @@ finwo/http-parser=https://github.com/finwo/http-parser/archive/refs/tags/stable.
 finwo/http-stable=https://github.com/finwo/http-server/archive/refs/tags/stable.tar.gz
 finwo/matter=https://github.com/finwo/matter/archive/refs/tags/stable.tar.gz
 finwo/mindex=https://github.com/finwo/c-mindex/archive/refs/tags/stable.tar.gz
+finwo/str_extra=https://github.com/finwo/c-strextra/archive/refs/tags/stable.tar.gz
 jacketizer/yuarel=https://raw.githubusercontent.com/finwo/dep-repository/main/jacketizer/yuarel/package.ini
 kgabis/parson=https://raw.githubusercontent.com/finwo/dep-repository/main/kgabis/parson/package.ini
 noporpoise/sort_r=https://raw.githubusercontent.com/finwo/dep-repository/main/noporpoise/sort_r/package.ini
