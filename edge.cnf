@@ -28,5 +28,6 @@ tidwall/json=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall
 tidwall/match=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/match/package.ini
 tidwall/rand=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rand/package.ini
 tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rtree/package.ini
+tom-seddon/yhs=https://raw.githubusercontent.com/finwo/dep-repository/main/tom-seddon/yhs/package.ini
 vmxdev/tkvdb=https://raw.githubusercontent.com/finwo/dep-repository/main/vmxdev/tkvdb/package.ini
 webview/webview=https://raw.githubusercontent.com/finwo/dep-repository/main/webview/webview/package.ini
