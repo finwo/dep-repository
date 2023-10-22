@@ -18,6 +18,7 @@ jacketizer/yuarel=https://raw.githubusercontent.com/finwo/dep-repository/main/ja
 kgabis/parson=https://raw.githubusercontent.com/finwo/dep-repository/main/kgabis/parson/package.ini
 noporpoise/sort_r=https://raw.githubusercontent.com/finwo/dep-repository/main/noporpoise/sort_r/package.ini
 orlp/ed25519=https://raw.githubusercontent.com/finwo/dep-repository/main/orlp/ed25519/package.ini
+pierreguillot/thread=https://raw.githubusercontent.com/finwo/dep-repository/main/pierreguillot/thread/package.ini
 rxi/dyad=https://raw.githubusercontent.com/finwo/dep-repository/main/rxi/dyad/package.ini
 sgtatham/coroutine=https://github.com/finwo/c-coroutine/archive/refs/tags/edge.tar.gz
 scyphus/url-parser=https://github.com/finwo/url-parser/archive/refs/tags/edge.tar.gz
