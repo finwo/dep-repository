@@ -34,4 +34,5 @@ tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwal
 tom-seddon/yhs=https://raw.githubusercontent.com/finwo/dep-repository/main/tom-seddon/yhs/package.ini
 user-none/winpthreads=https://github.com/finwo/winpthreads/archive/refs/tags/stable.tar.gz
 vmxdev/tkvdb=https://raw.githubusercontent.com/finwo/dep-repository/main/vmxdev/tkvdb/package.ini
+vurtun/mm_web=https://raw.githubusercontent.com/finwo/dep-repository/main/vurtun/mm_web/package.ini
 webview/webview=https://raw.githubusercontent.com/finwo/dep-repository/main/webview/webview/package.ini
