@@ -26,7 +26,7 @@ index 186d3f2..628ab2a 100644
 +
 +#endif // defined(_WIN32) || defined(_WIN64)
 diff --git a/wepoll.h b/wepoll.h
-index daf6bdb..2a0edb0 100644
+index daf6bdb..a36123a 100644
 --- a/wepoll.h
 +++ b/wepoll.h
 @@ -32,6 +32,8 @@
@@ -54,7 +54,7 @@ index daf6bdb..2a0edb0 100644
 +      //
 +#include <sys/epoll.h>
 +
-+typedef void* EPOLL_HANDLE;
++typedef int EPOLL_HANDLE;
 +
 +#endif // defined(_WIN32) || defined(_WIN64)
 +
