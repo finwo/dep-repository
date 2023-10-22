@@ -1,0 +1,43 @@
+diff --git a/wepoll.c b/wepoll.c
+index 186d3f2..7637958 100644
+--- a/wepoll.c
++++ b/wepoll.c
+@@ -33,6 +33,8 @@
+ #define WEPOLL_EXPORT
+ #endif
+ 
++#if defined(_WIN32) || defined(_WIN64)
++
+ #include <stdint.h>
+ 
+ enum EPOLL_EVENTS {
+@@ -2251,3 +2253,5 @@ SOCKET ws_get_base_socket(SOCKET socket) {
+       return_set_error(INVALID_SOCKET, error);
+   }
+ }
++
++#endif // defined(_WIN32) || defined(_WIN64)
+diff --git a/wepoll.h b/wepoll.h
+index daf6bdb..2930acd 100644
+--- a/wepoll.h
++++ b/wepoll.h
+@@ -32,6 +32,8 @@
+ #ifndef WEPOLL_H_
+ #define WEPOLL_H_
+ 
++#if defined(_WIN32) || defined(_WIN64)
++
+ #ifndef WEPOLL_EXPORT
+ #define WEPOLL_EXPORT
+ #endif
+@@ -110,4 +112,10 @@ WEPOLL_EXPORT int epoll_wait(HANDLE ephnd,
+ } /* extern "C" */
+ #endif
+ 
++#else // defined(_WIN32) || defined(_WIN64)
++      //
++#include <sys/epoll.h>
++
++#endif // defined(_WIN32) || defined(_WIN64)
++
+ #endif /* WEPOLL_H_ */
