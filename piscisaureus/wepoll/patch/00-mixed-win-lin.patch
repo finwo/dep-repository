@@ -1,5 +1,5 @@
 diff --git a/wepoll.c b/wepoll.c
-index 186d3f2..7637958 100644
+index 186d3f2..628ab2a 100644
 --- a/wepoll.c
 +++ b/wepoll.c
 @@ -33,6 +33,8 @@
@@ -11,14 +11,22 @@ index 186d3f2..7637958 100644
  #include <stdint.h>
  
  enum EPOLL_EVENTS {
-@@ -2251,3 +2253,5 @@ SOCKET ws_get_base_socket(SOCKET socket) {
+@@ -69,6 +71,7 @@ enum EPOLL_EVENTS {
+ 
+ typedef void* HANDLE;
+ typedef uintptr_t SOCKET;
++typedef HANDLE EPOLL_HANDLE;
+ 
+ typedef union epoll_data {
+   void* ptr;
+@@ -2251,3 +2254,5 @@ SOCKET ws_get_base_socket(SOCKET socket) {
        return_set_error(INVALID_SOCKET, error);
    }
  }
 +
 +#endif // defined(_WIN32) || defined(_WIN64)
 diff --git a/wepoll.h b/wepoll.h
-index daf6bdb..2930acd 100644
+index daf6bdb..2a0edb0 100644
 --- a/wepoll.h
 +++ b/wepoll.h
 @@ -32,6 +32,8 @@
@@ -30,13 +38,23 @@ index daf6bdb..2930acd 100644
  #ifndef WEPOLL_EXPORT
  #define WEPOLL_EXPORT
  #endif
-@@ -110,4 +112,10 @@ WEPOLL_EXPORT int epoll_wait(HANDLE ephnd,
+@@ -72,6 +74,7 @@ enum EPOLL_EVENTS {
+ 
+ typedef void* HANDLE;
+ typedef uintptr_t SOCKET;
++typedef HANDLE EPOLL_HANDLE;
+ 
+ typedef union epoll_data {
+   void* ptr;
+@@ -110,4 +113,12 @@ WEPOLL_EXPORT int epoll_wait(HANDLE ephnd,
  } /* extern "C" */
  #endif
  
 +#else // defined(_WIN32) || defined(_WIN64)
 +      //
 +#include <sys/epoll.h>
++
++typedef void* EPOLL_HANDLE;
 +
 +#endif // defined(_WIN32) || defined(_WIN64)
 +
