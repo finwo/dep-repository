@@ -5,6 +5,7 @@ benhoyt/inih=https://raw.githubusercontent.com/finwo/dep-repository/main/benhoyt
 cesanta/mongoose=https://raw.githubusercontent.com/finwo/dep-repository/main/cesanta/mongoose/package.ini
 cgraham/protothreads=https://github.com/finwo/c-protothreads/archive/refs/tags/cgraham.tar.gz
 cofyc/argparse=https://raw.githubusercontent.com/finwo/dep-repository/main/cofyc/argparse/package.ini
+finwo/asprintf=https://github.com/finwo/c-asprintf/archive/refs/tags/stable.tar.gz
 finwo/assert=https://github.com/finwo/c-assert/archive/refs/tags/stable.tar.gz
 finwo/benchmark=https://github.com/finwo/c-benchmark/archive/refs/tags/stable.tar.gz
 finwo/buf_extra=https://github.com/finwo/c-bufextra/archive/refs/tags/stable.tar.gz
