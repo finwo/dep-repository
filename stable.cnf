@@ -33,6 +33,7 @@ tidwall/json=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall
 tidwall/match=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/match/package.ini
 tidwall/rand=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rand/package.ini
 tidwall/rtree=https://raw.githubusercontent.com/finwo/dep-repository/main/tidwall/rtree/package.ini
+tinycthread/tinycthread=https://raw.githubusercontent.com/finwo/dep-repository/main/tinycthread/tinycthread/package.ini
 tom-seddon/yhs=https://raw.githubusercontent.com/finwo/dep-repository/main/tom-seddon/yhs/package.ini
 user-none/winpthreads=https://github.com/finwo/winpthreads/archive/refs/tags/stable.tar.gz
 vmxdev/tkvdb=https://raw.githubusercontent.com/finwo/dep-repository/main/vmxdev/tkvdb/package.ini
