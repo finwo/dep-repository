@@ -14,8 +14,8 @@ ifeq ($(OS),Windows_NT)
     endif
 else
     UNAME_S := $(shell uname -s)
-    override CFLAGS+=-lpthread
     ifeq ($(UNAME_S),Linux)
+        override CFLAGS+=-lpthread
         # CFLAGS += -D LINUX
     endif
     ifeq ($(UNAME_S),Darwin)
