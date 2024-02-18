@@ -42,3 +42,4 @@ user-none/winpthreads=https://github.com/finwo/winpthreads/archive/refs/tags/sta
 vmxdev/tkvdb=https://raw.githubusercontent.com/finwo/dep-repository/main/vmxdev/tkvdb/package.ini
 vurtun/mm_web=https://raw.githubusercontent.com/finwo/dep-repository/main/vurtun/mm_web/package.ini
 webview/webview=https://raw.githubusercontent.com/finwo/dep-repository/main/webview/webview/package.ini
+win32ports/sys_time_h=https://raw.githubusercontent.com/finwo/dep-repository/main/win32ports/sys_time_h/package.ini
