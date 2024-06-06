@@ -1,1 +1,2 @@
-CFLAGS+=-l:__DIRNAME/libsqlite3.la
+override CFLAGS+=-L__DIRNAME/.libs
+override CFLAGS+=-lsqlite3
