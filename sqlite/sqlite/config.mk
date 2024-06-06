@@ -7,3 +7,4 @@ lib/sqlite/sqlite/.libs/sqlite3.o:
 		make clean ;\
 		make -j \
 	)
+
