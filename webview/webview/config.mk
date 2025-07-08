@@ -1,5 +1,5 @@
 SRC+=__DIRNAME/core/src/webview.cc
-INCLUDE+=-I__DIRNAME/core/include
+INCLUDES+=-I__DIRNAME/core/include
 
 ifeq ($(OS),Windows_NT)
     # CFLAGS += -D WIN32
