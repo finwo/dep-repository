@@ -1,1 +1,5 @@
+LVGL_PATH := __DIRNAME
 include __DIRNAME/lvgl.mk
+SRC+=$(CSRCS)
+SRC+=$(CXXSRCS)
+INCLUDES+=-I__DIRNAME/..
