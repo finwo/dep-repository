@@ -1,4 +1,4 @@
-SRC+=__DIRNAME/webview.cc
+SRC+=__DIRNAME/core/src/webview.cc
 
 ifeq ($(OS),Windows_NT)
     # CFLAGS += -D WIN32
