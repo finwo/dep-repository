@@ -1,1 +1,1 @@
-SRC+=__DIRNAME/src/buf.c
+SRC+=__DIRNAME/src/xml.c
