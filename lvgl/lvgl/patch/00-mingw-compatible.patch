@@ -1,0 +1,26 @@
+diff --git a/docs/src/details/integration/driver/windows.rst b/docs/src/details/integration/driver/windows.rst
+index 920f03fdb..a84a6ddcb 100644
+--- a/docs/src/details/integration/driver/windows.rst
++++ b/docs/src/details/integration/driver/windows.rst
+@@ -61,7 +61,7 @@ Usage
+ 
+ .. code-block:: c
+ 
+-    #include <Windows.h>
++    #include <windows.h>
+     #include "lvgl/lvgl.h"
+     #include "lvgl/examples/lv_examples.h"
+     #include "lvgl/demos/lv_demos.h"
+diff --git a/src/osal/lv_windows.h b/src/osal/lv_windows.h
+index 9d864535d..de158ab12 100644
+--- a/src/osal/lv_windows.h
++++ b/src/osal/lv_windows.h
+@@ -16,7 +16,7 @@ extern "C" {
+ 
+ #if LV_USE_OS == LV_OS_WINDOWS
+ 
+-#include <Windows.h>
++#include <windows.h>
+ #include <stdbool.h>
+ 
+ /*********************
