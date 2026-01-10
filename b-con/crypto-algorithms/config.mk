@@ -1,0 +1,10 @@
+SRC+=__DIRNAME/aes.c
+SRC+=__DIRNAME/arcfour.c
+SRC+=__DIRNAME/base64.c
+SRC+=__DIRNAME/blowfish.c
+SRC+=__DIRNAME/des.c
+SRC+=__DIRNAME/md2.c
+SRC+=__DIRNAME/md5.c
+SRC+=__DIRNAME/rot-13.c
+SRC+=__DIRNAME/sha1.c
+SRC+=__DIRNAME/sha256.c
