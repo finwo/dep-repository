@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+patch -p1 < patch/00-single-file-compile.patch

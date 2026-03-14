@@ -1,0 +1,10 @@
+# SRC+={{module.dirname}}/src/add_scalar.c
+SRC+={{module.dirname}}/src/fe.c
+SRC+={{module.dirname}}/src/ge.c
+SRC+={{module.dirname}}/src/key_exchange.c
+SRC+={{module.dirname}}/src/keypair.c
+SRC+={{module.dirname}}/src/sc.c
+SRC+={{module.dirname}}/src/seed.c
+SRC+={{module.dirname}}/src/sha512.c
+SRC+={{module.dirname}}/src/sign.c
+SRC+={{module.dirname}}/src/verify.c
