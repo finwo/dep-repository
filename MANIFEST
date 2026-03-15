@@ -9,4 +9,5 @@ finwo/url-parser      https://git.finwo.net/lib/url-parser.c/archives/heads/main
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
+tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
 win32ports/sys_time_h https://git.finwo.net/misc/dep-repository/archives/heads/pkg/win32ports/sys_time_h.tar.gz
