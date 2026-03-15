@@ -6,5 +6,5 @@ finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar
 finwo/resp.c          https://github.com/finwo/resp.c/archive/refs/heads/main.tar.gz
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
+rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
 win32ports/sys_time_h https://git.finwo.net/misc/dep-repository/archives/heads/pkg/win32ports/sys_time_h.tar.gz
-
