@@ -1,1 +1,1 @@
-SRC+={{module.dirname}}/rand.c
+SRC+={{module.dirname}}/neco.c
