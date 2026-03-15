@@ -1,1 +1,1 @@
-SRC+={{module.dirname}}/json.c
+SRC+={{module.dirname}}/hashmap.c
