@@ -1,0 +1,17 @@
+diff --git a/evio.c b/evio.c
+index 7b3ecc0..262be61 100644
+--- a/evio.c
++++ b/evio.c
+@@ -20,9 +20,10 @@
+ #include <time.h>
+ #include <arpa/inet.h>
+ #include <pthread.h> 
++
+ #include "evio.h"
+-#include "buf.h"
+-#include "hashmap.h"
++#include "tidwall/buf.h"
++#include "tidwall/hashmap.h"
+ 
+ static void *(*_malloc)(size_t) = NULL;
+ static void (*_free)(void *) = NULL;
