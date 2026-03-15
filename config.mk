@@ -1,1 +1,1 @@
-SRC+={{module.dirname}}/rtree.c
+SRC+={{module.dirname}}/rand.c
