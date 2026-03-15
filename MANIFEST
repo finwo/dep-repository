@@ -4,5 +4,7 @@ finwo/assert          https://git.finwo.net/lib/assert.h/archives/heads/main.tar
 finwo/benchmark       https://git.finwo.net/lib/benchmark.c/archives/heads/main.tar.gz
 finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar.gz
 finwo/resp.c          https://github.com/finwo/resp.c/archive/refs/heads/main.tar.gz
+graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 win32ports/sys_time_h https://git.finwo.net/misc/dep-repository/archives/heads/pkg/win32ports/sys_time_h.tar.gz
+
