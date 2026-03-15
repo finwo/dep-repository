@@ -1,1 +1,1 @@
-SRC+={{module.dirname}}/neco.c
+SRC+={{module.dirname}}/json.c
