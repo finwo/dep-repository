@@ -12,4 +12,12 @@ graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/p
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
 tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
+tidwall/btree        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/btree.tar.gz
+tidwall/evio         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/evio.tar.gz
+tidwall/hashmap      https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/hashmap.tar.gz
+tidwall/json         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/json.tar.gz
+tidwall/match        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/match.tar.gz
+tidwall/neco         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/neco.tar.gz
+tidwall/rand         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/rand.tar.gz
+tidwall/rtree        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/rtree.tar.gz
 win32ports/sys_time_h https://git.finwo.net/misc/dep-repository/archives/heads/pkg/win32ports/sys_time_h.tar.gz
