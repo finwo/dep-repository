@@ -11,6 +11,7 @@ finwo/url-parser      https://git.finwo.net/lib/url-parser.c/archives/heads/main
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
+rxi/microtar          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/microtar.tar.gz
 tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
 tidwall/btree        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/btree.tar.gz
 tidwall/evio         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/evio.tar.gz
