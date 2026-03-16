@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+
+if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Cygwin" ] && [ "$OS" != "Windows_NT" ]; then
+    exit 0
+fi
+
+mkdir -p external/tools
+mkdir -p external/libs
+
+if [ ! -f external/tools/nuget.exe ]; then
+    curl -sSLo external/tools/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+fi
+
+if [ ! -d external/libs/Microsoft.Web.WebView2.1.0.1150.38 ]; then
+    external/tools/nuget.exe install Microsoft.Web.WebView2 -Verbosity quiet -Version "1.0.1150.38" -OutputDirectory external/libs
+fi
