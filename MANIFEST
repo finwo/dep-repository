@@ -12,6 +12,7 @@ graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/p
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
 rxi/microtar          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/microtar.tar.gz
+rxi/dyad              https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/dyad.tar.gz
 tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
 tidwall/btree        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/btree.tar.gz
 tidwall/evio         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/evio.tar.gz
