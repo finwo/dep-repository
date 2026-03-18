@@ -3,6 +3,7 @@ cofyc/argparse        https://git.finwo.net/misc/dep-repository/archives/heads/p
 emmanuel-marty/em_inflate https://git.finwo.net/misc/dep-repository/archives/heads/pkg/emmanuel-marty/em_inflate.tar.gz
 finwo/assert          https://git.finwo.net/lib/assert.h/archives/heads/main.tar.gz
 finwo/benchmark       https://git.finwo.net/lib/benchmark.c/archives/heads/main.tar.gz
+finwo/crc16-xmodem    https://git.finwo.net/lib/crc16-xmodem.c/archives/heads/main.tar.gz
 finwo/em_inflate      https://git.finwo.net/lib/em_inflate.c/archives/heads/main.tar.gz
 finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar.gz
 finwo/mindex          https://git.finwo.net/lib/mindex.c/archives/heads/main.tar.gz
