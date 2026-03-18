@@ -7,6 +7,7 @@ finwo/em_inflate      https://git.finwo.net/lib/em_inflate.c/archives/heads/main
 finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar.gz
 finwo/mindex          https://git.finwo.net/lib/mindex.c/archives/heads/main.tar.gz
 finwo/resp            https://git.finwo.net/lib/resp.c/archives/heads/main.tar.gz
+finwo/scheduler       https://git.finwo.net/lib/scheduler.c/archives/heads/main.tar.gz
 finwo/socket-util     https://git.finwo.net/lib/socket-util.c/archives/heads/main.tar.gz
 finwo/url-parser      https://git.finwo.net/lib/url-parser.c/archives/heads/main.tar.gz
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
