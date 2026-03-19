@@ -7,6 +7,7 @@ finwo/crc16-xmodem    https://git.finwo.net/lib/crc16-xmodem.c/archives/heads/ma
 finwo/em_inflate      https://git.finwo.net/lib/em_inflate.c/archives/heads/main.tar.gz
 finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar.gz
 finwo/mindex          https://git.finwo.net/lib/mindex.c/archives/heads/main.tar.gz
+finwo/pbkdf2          https://git.finwo.net/lib/pbkdf2.c/archives/heads/main.tar.gz
 finwo/resp            https://git.finwo.net/lib/resp.c/archives/heads/main.tar.gz
 finwo/scheduler       https://git.finwo.net/lib/scheduler.c/archives/heads/main.tar.gz
 finwo/socket-util     https://git.finwo.net/lib/socket-util.c/archives/heads/main.tar.gz
