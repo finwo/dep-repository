@@ -13,14 +13,15 @@ finwo/scheduler       https://git.finwo.net/lib/scheduler.c/archives/heads/main.
 finwo/socket-util     https://git.finwo.net/lib/socket-util.c/archives/heads/main.tar.gz
 finwo/url-parser      https://git.finwo.net/lib/url-parser.c/archives/heads/main.tar.gz
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
+kbrsh/slash           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/kbrsh/slash.tar.gz
 kgabis/parson         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/kgabis/parson.tar.gz
 nemequ/munit          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/nemequ/munit.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
+rxi/dyad              https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/dyad.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
 rxi/microtar          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/microtar.tar.gz
-rxi/dyad              https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/dyad.tar.gz
-tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
 tidwall/btree         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/btree.tar.gz
+tidwall/buf           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/buf.tar.gz
 tidwall/evio          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/evio.tar.gz
 tidwall/hashmap       https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/hashmap.tar.gz
 tidwall/json          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/tidwall/json.tar.gz
