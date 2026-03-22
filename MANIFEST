@@ -1,5 +1,6 @@
 benhoyt/inih          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/benhoyt/inih.tar.gz
 cofyc/argparse        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/cofyc/argparse.tar.gz
+dhess/ringbuf         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/dhess/ringbuf.tar.gz
 emmanuel-marty/em_inflate https://git.finwo.net/misc/dep-repository/archives/heads/pkg/emmanuel-marty/em_inflate.tar.gz
 finwo/assert          https://git.finwo.net/lib/assert.h/archives/heads/main.tar.gz
 finwo/benchmark       https://git.finwo.net/lib/benchmark.c/archives/heads/main.tar.gz
