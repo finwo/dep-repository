@@ -17,6 +17,7 @@ graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/p
 kbrsh/slash           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/kbrsh/slash.tar.gz
 kgabis/parson         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/kgabis/parson.tar.gz
 nemequ/munit          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/nemequ/munit.tar.gz
+noporpoise/sort_r     https://git.finwo.net/misc/dep-repository/archives/heads/pkg/noporpoise/sort_r.tar.gz
 orlp/ed25519          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/orlp/ed25519.tar.gz
 rxi/dyad              https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/dyad.tar.gz
 rxi/log               https://git.finwo.net/misc/dep-repository/archives/heads/pkg/rxi/log.tar.gz
