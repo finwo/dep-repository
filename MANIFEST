@@ -2,6 +2,7 @@ benhoyt/inih          https://git.finwo.net/misc/dep-repository/archives/heads/p
 cofyc/argparse        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/cofyc/argparse.tar.gz
 dhess/ringbuf         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/dhess/ringbuf.tar.gz
 emmanuel-marty/em_inflate https://git.finwo.net/misc/dep-repository/archives/heads/pkg/emmanuel-marty/em_inflate.tar.gz
+finwo/asprintf        https://git.finwo.net/lib/asprintf.c/archives/heads/main.tar.gz
 finwo/assert          https://git.finwo.net/lib/assert.h/archives/heads/main.tar.gz
 finwo/benchmark       https://git.finwo.net/lib/benchmark.c/archives/heads/main.tar.gz
 finwo/crc16-xmodem    https://git.finwo.net/lib/crc16-xmodem.c/archives/heads/main.tar.gz
@@ -13,6 +14,7 @@ finwo/pbkdf2          https://git.finwo.net/lib/pbkdf2.c/archives/heads/main.tar
 finwo/resp            https://git.finwo.net/lib/resp.c/archives/heads/main.tar.gz
 finwo/scheduler       https://git.finwo.net/lib/scheduler.c/archives/heads/main.tar.gz
 finwo/socket-util     https://git.finwo.net/lib/socket-util.c/archives/heads/main.tar.gz
+finwo/str_extra       https://git.finwo.net/lib/str_extra.c/archives/heads/main.tar.gz
 finwo/url-parser      https://git.finwo.net/lib/url-parser.c/archives/heads/main.tar.gz
 graphitemaster/incbin https://git.finwo.net/misc/dep-repository/archives/heads/pkg/graphitemaster/incbin.tar.gz
 kbrsh/slash           https://git.finwo.net/misc/dep-repository/archives/heads/pkg/kbrsh/slash.tar.gz
