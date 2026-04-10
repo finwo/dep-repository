@@ -10,6 +10,7 @@ finwo/crc16-xmodem    https://git.finwo.net/lib/crc16-xmodem.c/archives/heads/ma
 finwo/dtype           https://git.finwo.net/lib/dtype.c/archives/heads/main.tar.gz
 finwo/em_inflate      https://git.finwo.net/lib/em_inflate.c/archives/heads/main.tar.gz
 finwo/http-parser     https://git.finwo.net/lib/http-parser.c/archives/heads/main.tar.gz
+finwo/http-server     https://git.finwo.net/lib/http-server.c/archives/heads/main.tar.gz
 finwo/matter          https://git.finwo.net/lib/matter.c/archives/heads/main.tar.gz
 finwo/mindex          https://git.finwo.net/lib/mindex.c/archives/heads/main.tar.gz
 finwo/pbkdf2          https://git.finwo.net/lib/pbkdf2.c/archives/heads/main.tar.gz
