@@ -1,0 +1,12 @@
+--- a/src/pg_query_fingerprint.c
++++ b/src/pg_query_fingerprint.c
+@@ -5,7 +5,8 @@
+ #include "pg_query_fingerprint.h"
+ 
+ #include "postgres.h"
+-#include "xxhash/xxhash.h"
++#define XXH_INLINE_ALL
++#include <cyan4973/xxhash.h>
+ #include "lib/ilist.h"
+ 
+ #include "parser/parser.h"

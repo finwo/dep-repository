@@ -1,0 +1,2 @@
+include/pganalyze/pg_query.h pg_query.h
+include/pganalyze/postgres_deparse.h postgres_deparse.h
