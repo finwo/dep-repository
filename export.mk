@@ -1,6 +1,5 @@
 SRC+=$(wildcard {{module.dirname}}/src/*.c)
 SRC+=$(wildcard {{module.dirname}}/src/postgres/*.c)
-SRC+=$(wildcard {{module.dirname}}/src/postgres/include/*.c)
 SRC+={{module.dirname}}/protobuf/pg_query.pb-c.c
 INCLUDES+=-I{{module.dirname}} -I{{module.dirname}}/src/include -I{{module.dirname}}/src/postgres/include
 ifeq ($(OS),Windows_NT)
