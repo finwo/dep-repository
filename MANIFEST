@@ -1,5 +1,6 @@
 benhoyt/inih          https://git.finwo.net/misc/dep-repository/archives/heads/pkg/benhoyt/inih.tar.gz
 cofyc/argparse        https://git.finwo.net/misc/dep-repository/archives/heads/pkg/cofyc/argparse.tar.gz
+coruus/keccak-tiny    https://git.finwo.net/misc/dep-repository/archives/heads/pkg/coruus/keccak-tiny.tar.gz
 cozis/tinytemplate    https://git.finwo.net/misc/dep-repository/archives/heads/pkg/cozis/tinytemplate.tar.gz
 cyan4973/xxhash       https://git.finwo.net/misc/dep-repository/archives/heads/pkg/cyan4973/xxhash.tar.gz
 dhess/ringbuf         https://git.finwo.net/misc/dep-repository/archives/heads/pkg/dhess/ringbuf.tar.gz
