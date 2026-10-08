@@ -1,0 +1,17 @@
+--- a/keccak-tiny.c
++++ b/keccak-tiny.c
+@@ -12,6 +12,14 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++/* glibc has no Annex K memset_s. */
++#if !defined(__STDC_LIB_EXT1__)
++static inline int memset_s(void *dest, size_t destsz, int ch, size_t count) {
++  (void)destsz;
++  memset(dest, ch, count);
++  return 0;
++}
++#endif
+ 
+ /******** The Keccak-f[1600] permutation ********/
+ 
