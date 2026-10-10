@@ -4,8 +4,8 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-+/* glibc has no Annex K memset_s. */
-+#if !defined(__STDC_LIB_EXT1__)
++/* glibc lacks Annex K memset_s; Apple's libc provides it. */
++#if !defined(__STDC_LIB_EXT1__) && !defined(__APPLE__)
 +static inline int memset_s(void *dest, size_t destsz, int ch, size_t count) {
 +  (void)destsz;
 +  memset(dest, ch, count);
