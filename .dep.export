@@ -1,0 +1,1 @@
+include/tree_sitter/static.h lib/include/tree_sitter/api.h
