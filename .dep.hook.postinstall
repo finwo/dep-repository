@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+# Skip if upstream already contains the fix (PR #39)
+if grep -q '#define MTAR_NAME_MAX' src/microtar.h; then
+  echo "microtar: long-path patch already applied, skipping" >&2
+else
+  patch -p1 < patch/00-long-path-support.patch
+fi
