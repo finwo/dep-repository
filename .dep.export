@@ -1,0 +1,1 @@
+include/tree-sitter/tree-sitter-regex.h bindings/c/tree_sitter/tree-sitter-regex.h
