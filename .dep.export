@@ -1,0 +1,1 @@
+include/tree-sitter/tree-sitter-rust.h bindings/c/tree-sitter-rust.h
