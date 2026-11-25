@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+CC="${CC:-cc}"
+AR="${AR:-ar}"
+CFLAGS="${CFLAGS:--O2} -std=c11 -fPIC -w"
+
+$CC $CFLAGS -I typescript/src -c typescript/src/parser.c -o typescript-src-parser-c
+$CC $CFLAGS -I typescript/src -c typescript/src/scanner.c -o typescript-src-scanner-c
+$CC $CFLAGS -I tsx/src -c tsx/src/parser.c -o tsx-src-parser-c
+$CC $CFLAGS -I tsx/src -c tsx/src/scanner.c -o tsx-src-scanner-c
+
+$AR rcs libtree-sitter-typescript.a typescript-src-parser-c typescript-src-scanner-c tsx-src-parser-c tsx-src-scanner-c
+rm -f typescript-src-parser-c typescript-src-scanner-c tsx-src-parser-c tsx-src-scanner-c

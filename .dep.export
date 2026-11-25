@@ -1,0 +1,2 @@
+include/tree-sitter/tree-sitter-typescript.h bindings/c/tree-sitter-typescript.h
+include/tree-sitter/tree-sitter-tsx.h bindings/c/tree-sitter-tsx.h
