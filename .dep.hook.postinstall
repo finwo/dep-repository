@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+CC="${CC:-cc}"
+AR="${AR:-ar}"
+CFLAGS="${CFLAGS:--O2} -std=c11 -fPIC -w"
+
+$CC $CFLAGS -I grammars/interface/src -c grammars/interface/src/parser.c -o grammars-interface-src-parser-c
+$CC $CFLAGS -I grammars/interface/src -c grammars/interface/src/scanner.c -o grammars-interface-src-scanner-c
+$CC $CFLAGS -I grammars/ocaml/src -c grammars/ocaml/src/parser.c -o grammars-ocaml-src-parser-c
+$CC $CFLAGS -I grammars/ocaml/src -c grammars/ocaml/src/scanner.c -o grammars-ocaml-src-scanner-c
+$CC $CFLAGS -I grammars/type/src -c grammars/type/src/parser.c -o grammars-type-src-parser-c
+$CC $CFLAGS -I grammars/type/src -c grammars/type/src/scanner.c -o grammars-type-src-scanner-c
+
+$AR rcs libtree-sitter-ocaml.a grammars-interface-src-parser-c grammars-interface-src-scanner-c grammars-ocaml-src-parser-c grammars-ocaml-src-scanner-c grammars-type-src-parser-c grammars-type-src-scanner-c
+rm -f grammars-interface-src-parser-c grammars-interface-src-scanner-c grammars-ocaml-src-parser-c grammars-ocaml-src-scanner-c grammars-type-src-parser-c grammars-type-src-scanner-c
