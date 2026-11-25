@@ -1,0 +1,1 @@
+include/tree-sitter/tree-sitter-julia.h bindings/c/tree_sitter/tree-sitter-julia.h
