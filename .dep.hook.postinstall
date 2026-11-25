@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+CC="${CC:-cc}"
+AR="${AR:-ar}"
+CFLAGS="${CFLAGS:--O2} -std=c11 -fPIC -w"
+
+$CC $CFLAGS -I src -c src/parser.c -o src-parser-c
+$CC $CFLAGS -I src -c src/scanner.c -o src-scanner-c
+
+$AR rcs libtree-sitter-agda.a src-parser-c src-scanner-c
+rm -f src-parser-c src-scanner-c
