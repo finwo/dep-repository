@@ -1,0 +1,1 @@
+include/tree-sitter/tree-sitter-haskell.h bindings/c/tree-sitter-haskell.h
