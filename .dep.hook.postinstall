@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+CC="${CC:-cc}"
+AR="${AR:-ar}"
+CFLAGS="${CFLAGS:--O2} -std=c11 -fPIC -w"
+
+$CC $CFLAGS -I php/src -c php/src/parser.c -o php-src-parser-c
+$CC $CFLAGS -I php/src -c php/src/scanner.c -o php-src-scanner-c
+
+$AR rcs libtree-sitter-php.a php-src-parser-c php-src-scanner-c
+rm -f php-src-parser-c php-src-scanner-c
