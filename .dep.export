@@ -1,0 +1,1 @@
+include/tree-sitter/tree-sitter-ruby.h bindings/c/tree-sitter-ruby.h
