@@ -1,3 +1,3 @@
-include/tree-sitter/tree-sitter-ocaml.h bindings/c/tree_sitter/tree-sitter-ocaml.h
-include/tree-sitter/tree-sitter-ocaml-interface.h bindings/c/tree_sitter/tree-sitter-ocaml-interface.h
-include/tree-sitter/tree-sitter-ocaml-type.h bindings/c/tree_sitter/tree-sitter-ocaml-type.h
+include/tree-sitter/tree-sitter-ocaml.h include/tree-sitter/tree-sitter-ocaml.h
+include/tree-sitter/tree-sitter-ocaml-interface.h include/tree-sitter/tree-sitter-ocaml-interface.h
+include/tree-sitter/tree-sitter-ocaml-type.h include/tree-sitter/tree-sitter-ocaml-type.h
