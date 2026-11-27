@@ -1,0 +1,971 @@
+diff --git a/naett.c b/naett.c
+index d4b0526..59b7ea0 100644
+--- a/naett.c
++++ b/naett.c
+@@ -5,6 +5,10 @@
+ #ifndef NAETT_INTERNAL_H
+ #define NAETT_INTERNAL_H
+ 
++#include <stdatomic.h>
++#include <stdbool.h>
++#include <stdint.h>
++
+ #ifdef _MSC_VER
+     #define strcasecmp _stricmp
+     #undef strdup
+@@ -95,12 +99,15 @@ typedef struct {
+     Buffer body;
+     int contentLength;  // 0 if headers not read, -1 if Content-Length missing.
+     int totalBytesRead;
++    atomic_bool cancelled;
+ #if __APPLE__
+     id session;
++    id task;
+ #endif
+ #if __ANDROID__
+     pthread_t workerThread;
+     int closeRequested;
++    atomic_uintptr_t connection;
+ #endif
+ #if __LINUX__
+     struct curl_slist* headerList;
+@@ -108,12 +115,14 @@ typedef struct {
+ #if __WINDOWS__
+     char buffer[10240];
+     size_t bytesLeft;
++    HINTERNET hRequest;
+ #endif
+ } InternalResponse;
+ 
+ void naettPlatformInit(naettInitData initData);
+ int naettPlatformInitRequest(InternalRequest* req);
+ void naettPlatformMakeRequest(InternalResponse* res);
++void naettPlatformCancel(InternalResponse* res);
+ void naettPlatformFreeRequest(InternalRequest* req);
+ void naettPlatformCloseResponse(InternalResponse* res);
+ 
+@@ -426,6 +435,18 @@ naettRes* naettMake(naettReq* request) {
+     return (naettRes*) res;
+ }
+ 
++void naettCancel(naettRes* response) {
++    assert(response != NULL);
++
++    InternalResponse* res = (InternalResponse*)response;
++    if (res->complete) {
++        return;
++    }
++
++    atomic_store(&res->cancelled, true);
++    naettPlatformCancel(res);
++}
++
+ const void* naettGetBody(naettRes* response, int* size) {
+     assert(response != NULL);
+     assert(size != NULL);
+@@ -736,7 +757,7 @@ static void didComplete(id self, SEL _sel, id session, id dataTask, id error) {
+     object_getInstanceVariable(self, "response", (void**)&res);
+     if (res != NULL) {
+         if (error != nil) {
+-            res->code = naettConnectionError;
++            res->code = atomic_load(&res->cancelled) ? naettCancelled : naettConnectionError;
+         }
+         res->complete = 1;
+     }
+@@ -778,17 +799,29 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     res->session = session;
+ 
+     id task = objc_msgSend_t(id, id)(session, sel("dataTaskWithRequest:"), req->urlRequest);
++    res->task = task;
++    retain(task);
+     objc_msgSend_void(task, sel("resume"));
+ 
+     release(p);
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    if (res->task) {
++        objc_msgSend_void(res->task, sel("cancel"));
++    }
++}
++
+ void naettPlatformFreeRequest(InternalRequest* req) {
+     release(req->urlRequest);
+     req->urlRequest = nil;
+ }
+ 
+ void naettPlatformCloseResponse(InternalResponse* res) {
++    if (res->task) {
++        release(res->task);
++        res->task = nil;
++    }
+     objc_msgSend_void(res->session, sel("invalidateAndCancel"));
+     res->session = nil;
+ }
+@@ -842,7 +875,11 @@ static void* curlWorker(void* data) {
+             CURL* handle = message->easy_handle;
+             InternalResponse* res = NULL;
+             curl_easy_getinfo(handle, CURLINFO_PRIVATE, (char**)&res);
+-            curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &res->code);
++            if (message->data.result == CURLE_ABORTED_BY_CALLBACK || atomic_load(&res->cancelled)) {
++                res->code = naettCancelled;
++            } else {
++                curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &res->code);
++            }
+             res->complete = 1;
+             curl_easy_cleanup(handle);
+         }
+@@ -899,12 +936,25 @@ static size_t readCallback(char* buffer, size_t size, size_t numItems, void* use
+ 
+ static size_t writeCallback(char* ptr, size_t size, size_t numItems, void* userData) {
+     InternalResponse* res = (InternalResponse*)userData;
++    if (atomic_load(&res->cancelled)) {
++        return 0;
++    }
++
+     InternalRequest* req = res->request;
+     size_t bytesWritten = req->options.bodyWriter(ptr, size * numItems, req->options.bodyWriterData);
+     res->totalBytesRead += bytesWritten;
+     return bytesWritten;
+ }
+ 
++static int progressCallback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
++    InternalResponse* res = (InternalResponse*)clientp;
++    (void)dltotal;
++    (void)dlnow;
++    (void)ultotal;
++    (void)ulnow;
++    return atomic_load(&res->cancelled) ? 1 : 0;
++}
++
+ #define METHOD(A, B, C) (((A) << 16) | ((B) << 8) | (C))
+ 
+ static void setupMethod(CURL* curl, const char* method) {
+@@ -987,6 +1037,10 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     curl_easy_setopt(c, CURLOPT_HEADERFUNCTION, headerCallback);
+     curl_easy_setopt(c, CURLOPT_HEADERDATA, res);
+ 
++    curl_easy_setopt(c, CURLOPT_NOPROGRESS, 0L);
++    curl_easy_setopt(c, CURLOPT_XFERINFOFUNCTION, progressCallback);
++    curl_easy_setopt(c, CURLOPT_XFERINFODATA, res);
++
+     curl_easy_setopt(c, CURLOPT_FOLLOWLOCATION, 1);
+ 
+     int bodySize = res->request->options.bodyReader(NULL, 0, res->request->options.bodyReaderData);
+@@ -1024,6 +1078,10 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+ void naettPlatformFreeRequest(InternalRequest* req) {
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    (void)res;
++}
++
+ void naettPlatformCloseResponse(InternalResponse* res) {
+     curl_slist_free_all(res->headerList);
+ }
+@@ -1122,6 +1180,10 @@ static void unpackHeaders(InternalResponse* res, LPWSTR packed) {
+     res->headers = firstHeader;
+ }
+ 
++static int failureCode(InternalResponse* res, int fallback) {
++    return atomic_load(&res->cancelled) ? naettCancelled : fallback;
++}
++
+ static void CALLBACK
+ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInformation, DWORD statusInfoLength) {
+     InternalResponse* res = (InternalResponse*)context;
+@@ -1162,7 +1224,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+             res->code = statusCode;
+ 
+             if (!WinHttpQueryDataAvailable(request, NULL)) {
+-                res->code = naettProtocolError;
++                res->code = failureCode(res, naettProtocolError);
+                 res->complete = 1;
+             }
+         } break;
+@@ -1177,7 +1239,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+ 
+             size_t bytesToRead = min(res->bytesLeft, sizeof(res->buffer));
+             if (!WinHttpReadData(request, res->buffer, (DWORD)bytesToRead, NULL)) {
+-                res->code = naettReadError;
++                res->code = failureCode(res, naettReadError);
+                 res->complete = 1;
+             }
+         } break;
+@@ -1187,7 +1249,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+ 
+             InternalRequest* req = res->request;
+             if (req->options.bodyWriter(res->buffer, (int)bytesRead, req->options.bodyWriterData) != bytesRead) {
+-                res->code = naettReadError;
++                res->code = failureCode(res, naettReadError);
+                 res->complete = 1;
+             }
+             res->totalBytesRead += (int)bytesRead;
+@@ -1195,12 +1257,12 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+             if (res->bytesLeft > 0) {
+                 size_t bytesToRead = min(res->bytesLeft, sizeof(res->buffer));
+                 if (!WinHttpReadData(request, res->buffer, (DWORD)bytesToRead, NULL)) {
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     res->complete = 1;
+                 }
+             } else {
+                 if (!WinHttpQueryDataAvailable(request, NULL)) {
+-                    res->code = naettProtocolError;
++                    res->code = failureCode(res, naettProtocolError);
+                     res->complete = 1;
+                 }
+             }
+@@ -1214,7 +1276,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+                 WinHttpWriteData(request, res->buffer, bytesRead, NULL);
+             } else {
+                 if (!WinHttpReceiveResponse(request, NULL)) {
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     res->complete = 1;
+                 }
+             }
+@@ -1227,16 +1289,16 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+                 case API_RECEIVE_RESPONSE:
+                 case API_QUERY_DATA_AVAILABLE:
+                 case API_READ_DATA:
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     break;
+                 case API_WRITE_DATA:
+-                    res->code = naettWriteError;
++                    res->code = failureCode(res, naettWriteError);
+                     break;
+                 case API_SEND_REQUEST:
+-                    res->code = naettConnectionError;
++                    res->code = failureCode(res, naettConnectionError);
+                     break;
+                 default:
+-                    res->code = naettGenericError;
++                    res->code = failureCode(res, naettGenericError);
+             }
+ 
+             res->complete = 1;
+@@ -1318,6 +1380,7 @@ int naettPlatformInitRequest(InternalRequest* req) {
+ 
+ void naettPlatformMakeRequest(InternalResponse* res) {
+     InternalRequest* req = res->request;
++    res->hRequest = req->request;
+ 
+     LPCWSTR extraHeaders = WINHTTP_NO_ADDITIONAL_HEADERS;
+     WCHAR contentLengthHeader[64];
+@@ -1334,6 +1397,16 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     }
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    HINTERNET h = (HINTERNET)InterlockedExchangePointer((PVOID volatile*)&res->hRequest, NULL);
++    if (!h) {
++        return;
++    }
++
++    WinHttpCloseHandle(h);
++    InterlockedExchangePointer((PVOID volatile*)&res->request->request, NULL);
++}
++
+ void naettPlatformFreeRequest(InternalRequest* req) {
+     assert(req != NULL);
+ 
+@@ -1482,6 +1555,12 @@ static void* processRequest(void* data) {
+         goto finally;
+     }
+ 
++    atomic_store(&res->connection, (uintptr_t)(*env)->NewGlobalRef(env, connection));
++    if (atomic_load(&res->cancelled)) {
++        voidCall(env, connection, "disconnect", "()V");
++        goto finally;
++    }
++
+     {
+         jstring name = (*env)->NewStringUTF(env, "User-Agent");
+         jstring value = (*env)->NewStringUTF(env, req->options.userAgent ? req->options.userAgent : NAETT_UA);
+@@ -1530,7 +1609,7 @@ static void* processRequest(void* data) {
+                 } else {
+                     break;
+                 }
+-            } while (!res->closeRequested);
++            } while (!res->closeRequested && !atomic_load(&res->cancelled));
+         voidCall(env, outputStream, "close", "()V");
+     }
+ 
+@@ -1604,13 +1683,16 @@ static void* processRequest(void* data) {
+             req->options.bodyWriter(byteBuffer, bytesRead, req->options.bodyWriterData);
+             res->totalBytesRead += bytesRead;
+         }
+-    } while (!res->closeRequested);
++    } while (!res->closeRequested && !atomic_load(&res->cancelled));
+ 
+     voidCall(env, inputStream, "close", "()V");
+ 
+     res->code = statusCode;
+ 
+ finally:
++    if (atomic_load(&res->cancelled)) {
++        res->code = naettCancelled;
++    }
+     res->complete = 1;
+     (*env)->PopLocalFrame(env, NULL);
+     JavaVM* vm = getVM();
+@@ -1636,6 +1718,20 @@ void naettPlatformFreeRequest(InternalRequest* req) {
+     (*env)->DeleteGlobalRef(env, req->urlObject);
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    jobject connection = (jobject)atomic_exchange(&res->connection, 0);
++    if (!connection) {
++        return;
++    }
++
++    JNIEnv* env = getEnv();
++    voidCall(env, connection, "disconnect", "()V");
++    if (catch (env)) {
++        (*env)->ExceptionClear(env);
++    }
++    (*env)->DeleteGlobalRef(env, connection);
++}
++
+ void naettPlatformCloseResponse(InternalResponse* res) {
+     res->closeRequested = 1;
+     if (res->workerThread != 0) {
+@@ -1644,6 +1740,12 @@ void naettPlatformCloseResponse(InternalResponse* res) {
+             LOGE("Failed to join: %s", strerror(joinResult));
+         }
+     }
++
++    jobject connection = (jobject)atomic_exchange(&res->connection, 0);
++    if (connection) {
++        JNIEnv* env = getEnv();
++        (*env)->DeleteGlobalRef(env, connection);
++    }
+ }
+ 
+ #endif  // __ANDROID__
+diff --git a/naett.h b/naett.h
+index b79130d..63639da 100644
+--- a/naett.h
++++ b/naett.h
+@@ -69,6 +69,13 @@ naettReq* naettRequestWithOptions(const char* url, int numOptions, const naettOp
+  */
+ naettRes* naettMake(naettReq* request);
+ 
++/**
++ * @brief Cancels an in-flight response.
++ * May be called from any thread. Once `naettComplete` returns 1,
++ * `naettGetStatus` reports `naettCancelled`.
++ */
++void naettCancel(naettRes* response);
++
+ /**
+  * @brief Frees a previously allocated request object.
+  * The request must not have any pending responses.
+@@ -88,6 +95,7 @@ enum naettStatus {
+     naettReadError = -3,
+     naettWriteError = -4,
+     naettGenericError = -5,
++    naettCancelled = -6,
+     naettProcessing = 0,
+ };
+ 
+diff --git a/src/naett_android.c b/src/naett_android.c
+index 30d3555..eb86787 100644
+--- a/src/naett_android.c
++++ b/src/naett_android.c
+@@ -114,6 +114,12 @@ static void* processRequest(void* data) {
+         goto finally;
+     }
+ 
++    atomic_store(&res->connection, (uintptr_t)(*env)->NewGlobalRef(env, connection));
++    if (atomic_load(&res->cancelled)) {
++        voidCall(env, connection, "disconnect", "()V");
++        goto finally;
++    }
++
+     {
+         jstring name = (*env)->NewStringUTF(env, "User-Agent");
+         jstring value = (*env)->NewStringUTF(env, req->options.userAgent ? req->options.userAgent : NAETT_UA);
+@@ -162,7 +168,7 @@ static void* processRequest(void* data) {
+                 } else {
+                     break;
+                 }
+-            } while (!res->closeRequested);
++            } while (!res->closeRequested && !atomic_load(&res->cancelled));
+         voidCall(env, outputStream, "close", "()V");
+     }
+ 
+@@ -236,13 +242,16 @@ static void* processRequest(void* data) {
+             req->options.bodyWriter(byteBuffer, bytesRead, req->options.bodyWriterData);
+             res->totalBytesRead += bytesRead;
+         }
+-    } while (!res->closeRequested);
++    } while (!res->closeRequested && !atomic_load(&res->cancelled));
+ 
+     voidCall(env, inputStream, "close", "()V");
+ 
+     res->code = statusCode;
+ 
+ finally:
++    if (atomic_load(&res->cancelled)) {
++        res->code = naettCancelled;
++    }
+     res->complete = 1;
+     (*env)->PopLocalFrame(env, NULL);
+     JavaVM* vm = getVM();
+@@ -268,6 +277,20 @@ void naettPlatformFreeRequest(InternalRequest* req) {
+     (*env)->DeleteGlobalRef(env, req->urlObject);
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    jobject connection = (jobject)atomic_exchange(&res->connection, 0);
++    if (!connection) {
++        return;
++    }
++
++    JNIEnv* env = getEnv();
++    voidCall(env, connection, "disconnect", "()V");
++    if (catch (env)) {
++        (*env)->ExceptionClear(env);
++    }
++    (*env)->DeleteGlobalRef(env, connection);
++}
++
+ void naettPlatformCloseResponse(InternalResponse* res) {
+     res->closeRequested = 1;
+     if (res->workerThread != 0) {
+@@ -276,6 +299,12 @@ void naettPlatformCloseResponse(InternalResponse* res) {
+             LOGE("Failed to join: %s", strerror(joinResult));
+         }
+     }
++
++    jobject connection = (jobject)atomic_exchange(&res->connection, 0);
++    if (connection) {
++        JNIEnv* env = getEnv();
++        (*env)->DeleteGlobalRef(env, connection);
++    }
+ }
+ 
+ #endif  // __ANDROID__
+diff --git a/src/naett_core.c b/src/naett_core.c
+index 0e9ee52..93441cf 100644
+--- a/src/naett_core.c
++++ b/src/naett_core.c
+@@ -305,6 +305,18 @@ naettRes* naettMake(naettReq* request) {
+     return (naettRes*) res;
+ }
+ 
++void naettCancel(naettRes* response) {
++    assert(response != NULL);
++
++    InternalResponse* res = (InternalResponse*)response;
++    if (res->complete) {
++        return;
++    }
++
++    atomic_store(&res->cancelled, true);
++    naettPlatformCancel(res);
++}
++
+ const void* naettGetBody(naettRes* response, int* size) {
+     assert(response != NULL);
+     assert(size != NULL);
+diff --git a/src/naett_internal.h b/src/naett_internal.h
+index 8dada44..60bb561 100644
+--- a/src/naett_internal.h
++++ b/src/naett_internal.h
+@@ -1,6 +1,10 @@
+ #ifndef NAETT_INTERNAL_H
+ #define NAETT_INTERNAL_H
+ 
++#include <stdatomic.h>
++#include <stdbool.h>
++#include <stdint.h>
++
+ #ifdef _MSC_VER
+     #define strcasecmp _stricmp
+     #undef strdup
+@@ -91,12 +95,15 @@ typedef struct {
+     Buffer body;
+     int contentLength;  // 0 if headers not read, -1 if Content-Length missing.
+     int totalBytesRead;
++    atomic_bool cancelled;
+ #if __APPLE__
+     id session;
++    id task;
+ #endif
+ #if __ANDROID__
+     pthread_t workerThread;
+     int closeRequested;
++    atomic_uintptr_t connection;
+ #endif
+ #if __LINUX__
+     struct curl_slist* headerList;
+@@ -104,12 +111,14 @@ typedef struct {
+ #if __WINDOWS__
+     char buffer[10240];
+     size_t bytesLeft;
++    HINTERNET hRequest;
+ #endif
+ } InternalResponse;
+ 
+ void naettPlatformInit(naettInitData initData);
+ int naettPlatformInitRequest(InternalRequest* req);
+ void naettPlatformMakeRequest(InternalResponse* res);
++void naettPlatformCancel(InternalResponse* res);
+ void naettPlatformFreeRequest(InternalRequest* req);
+ void naettPlatformCloseResponse(InternalResponse* res);
+ 
+diff --git a/src/naett_linux.c b/src/naett_linux.c
+index 49786b6..1213b20 100644
+--- a/src/naett_linux.c
++++ b/src/naett_linux.c
+@@ -43,7 +43,11 @@ static void* curlWorker(void* data) {
+             CURL* handle = message->easy_handle;
+             InternalResponse* res = NULL;
+             curl_easy_getinfo(handle, CURLINFO_PRIVATE, (char**)&res);
+-            curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &res->code);
++            if (message->data.result == CURLE_ABORTED_BY_CALLBACK || atomic_load(&res->cancelled)) {
++                res->code = naettCancelled;
++            } else {
++                curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &res->code);
++            }
+             res->complete = 1;
+             curl_easy_cleanup(handle);
+         }
+@@ -100,12 +104,25 @@ static size_t readCallback(char* buffer, size_t size, size_t numItems, void* use
+ 
+ static size_t writeCallback(char* ptr, size_t size, size_t numItems, void* userData) {
+     InternalResponse* res = (InternalResponse*)userData;
++    if (atomic_load(&res->cancelled)) {
++        return 0;
++    }
++
+     InternalRequest* req = res->request;
+     size_t bytesWritten = req->options.bodyWriter(ptr, size * numItems, req->options.bodyWriterData);
+     res->totalBytesRead += bytesWritten;
+     return bytesWritten;
+ }
+ 
++static int progressCallback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
++    InternalResponse* res = (InternalResponse*)clientp;
++    (void)dltotal;
++    (void)dlnow;
++    (void)ultotal;
++    (void)ulnow;
++    return atomic_load(&res->cancelled) ? 1 : 0;
++}
++
+ #define METHOD(A, B, C) (((A) << 16) | ((B) << 8) | (C))
+ 
+ static void setupMethod(CURL* curl, const char* method) {
+@@ -188,6 +205,10 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     curl_easy_setopt(c, CURLOPT_HEADERFUNCTION, headerCallback);
+     curl_easy_setopt(c, CURLOPT_HEADERDATA, res);
+ 
++    curl_easy_setopt(c, CURLOPT_NOPROGRESS, 0L);
++    curl_easy_setopt(c, CURLOPT_XFERINFOFUNCTION, progressCallback);
++    curl_easy_setopt(c, CURLOPT_XFERINFODATA, res);
++
+     curl_easy_setopt(c, CURLOPT_FOLLOWLOCATION, 1);
+ 
+     int bodySize = res->request->options.bodyReader(NULL, 0, res->request->options.bodyReaderData);
+@@ -225,6 +246,10 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+ void naettPlatformFreeRequest(InternalRequest* req) {
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    (void)res;
++}
++
+ void naettPlatformCloseResponse(InternalResponse* res) {
+     curl_slist_free_all(res->headerList);
+ }
+diff --git a/src/naett_osx.c b/src/naett_osx.c
+index 68c7099..1c8926b 100644
+--- a/src/naett_osx.c
++++ b/src/naett_osx.c
+@@ -140,7 +140,7 @@ static void didComplete(id self, SEL _sel, id session, id dataTask, id error) {
+     object_getInstanceVariable(self, "response", (void**)&res);
+     if (res != NULL) {
+         if (error != nil) {
+-            res->code = naettConnectionError;
++            res->code = atomic_load(&res->cancelled) ? naettCancelled : naettConnectionError;
+         }
+         res->complete = 1;
+     }
+@@ -182,17 +182,29 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     res->session = session;
+ 
+     id task = objc_msgSend_t(id, id)(session, sel("dataTaskWithRequest:"), req->urlRequest);
++    res->task = task;
++    retain(task);
+     objc_msgSend_void(task, sel("resume"));
+ 
+     release(p);
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    if (res->task) {
++        objc_msgSend_void(res->task, sel("cancel"));
++    }
++}
++
+ void naettPlatformFreeRequest(InternalRequest* req) {
+     release(req->urlRequest);
+     req->urlRequest = nil;
+ }
+ 
+ void naettPlatformCloseResponse(InternalResponse* res) {
++    if (res->task) {
++        release(res->task);
++        res->task = nil;
++    }
+     objc_msgSend_void(res->session, sel("invalidateAndCancel"));
+     res->session = nil;
+ }
+diff --git a/src/naett_win.c b/src/naett_win.c
+index b75c687..c65912c 100644
+--- a/src/naett_win.c
++++ b/src/naett_win.c
+@@ -88,6 +88,10 @@ static void unpackHeaders(InternalResponse* res, LPWSTR packed) {
+     res->headers = firstHeader;
+ }
+ 
++static int failureCode(InternalResponse* res, int fallback) {
++    return atomic_load(&res->cancelled) ? naettCancelled : fallback;
++}
++
+ static void CALLBACK
+ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInformation, DWORD statusInfoLength) {
+     InternalResponse* res = (InternalResponse*)context;
+@@ -128,7 +132,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+             res->code = statusCode;
+ 
+             if (!WinHttpQueryDataAvailable(request, NULL)) {
+-                res->code = naettProtocolError;
++                res->code = failureCode(res, naettProtocolError);
+                 res->complete = 1;
+             }
+         } break;
+@@ -143,7 +147,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+ 
+             size_t bytesToRead = min(res->bytesLeft, sizeof(res->buffer));
+             if (!WinHttpReadData(request, res->buffer, (DWORD)bytesToRead, NULL)) {
+-                res->code = naettReadError;
++                res->code = failureCode(res, naettReadError);
+                 res->complete = 1;
+             }
+         } break;
+@@ -153,7 +157,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+ 
+             InternalRequest* req = res->request;
+             if (req->options.bodyWriter(res->buffer, (int)bytesRead, req->options.bodyWriterData) != bytesRead) {
+-                res->code = naettReadError;
++                res->code = failureCode(res, naettReadError);
+                 res->complete = 1;
+             }
+             res->totalBytesRead += (int)bytesRead;
+@@ -161,12 +165,12 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+             if (res->bytesLeft > 0) {
+                 size_t bytesToRead = min(res->bytesLeft, sizeof(res->buffer));
+                 if (!WinHttpReadData(request, res->buffer, (DWORD)bytesToRead, NULL)) {
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     res->complete = 1;
+                 }
+             } else {
+                 if (!WinHttpQueryDataAvailable(request, NULL)) {
+-                    res->code = naettProtocolError;
++                    res->code = failureCode(res, naettProtocolError);
+                     res->complete = 1;
+                 }
+             }
+@@ -180,7 +184,7 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+                 WinHttpWriteData(request, res->buffer, bytesRead, NULL);
+             } else {
+                 if (!WinHttpReceiveResponse(request, NULL)) {
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     res->complete = 1;
+                 }
+             }
+@@ -193,16 +197,16 @@ callback(HINTERNET request, DWORD_PTR context, DWORD status, LPVOID statusInform
+                 case API_RECEIVE_RESPONSE:
+                 case API_QUERY_DATA_AVAILABLE:
+                 case API_READ_DATA:
+-                    res->code = naettReadError;
++                    res->code = failureCode(res, naettReadError);
+                     break;
+                 case API_WRITE_DATA:
+-                    res->code = naettWriteError;
++                    res->code = failureCode(res, naettWriteError);
+                     break;
+                 case API_SEND_REQUEST:
+-                    res->code = naettConnectionError;
++                    res->code = failureCode(res, naettConnectionError);
+                     break;
+                 default:
+-                    res->code = naettGenericError;
++                    res->code = failureCode(res, naettGenericError);
+             }
+ 
+             res->complete = 1;
+@@ -284,6 +288,7 @@ int naettPlatformInitRequest(InternalRequest* req) {
+ 
+ void naettPlatformMakeRequest(InternalResponse* res) {
+     InternalRequest* req = res->request;
++    res->hRequest = req->request;
+ 
+     LPCWSTR extraHeaders = WINHTTP_NO_ADDITIONAL_HEADERS;
+     WCHAR contentLengthHeader[64];
+@@ -300,6 +305,16 @@ void naettPlatformMakeRequest(InternalResponse* res) {
+     }
+ }
+ 
++void naettPlatformCancel(InternalResponse* res) {
++    HINTERNET h = (HINTERNET)InterlockedExchangePointer((PVOID volatile*)&res->hRequest, NULL);
++    if (!h) {
++        return;
++    }
++
++    WinHttpCloseHandle(h);
++    InterlockedExchangePointer((PVOID volatile*)&res->request->request, NULL);
++}
++
+ void naettPlatformFreeRequest(InternalRequest* req) {
+     assert(req != NULL);
+ 
+diff --git a/testrig/rig.go b/testrig/rig.go
+index 6abea54..37a6fc0 100644
+--- a/testrig/rig.go
++++ b/testrig/rig.go
+@@ -8,6 +8,7 @@ import (
+ 	"os"
+ 	"os/exec"
+ 	"path"
++	"time"
+ )
+ 
+ func main() {
+@@ -68,6 +69,7 @@ func serve() {
+ 	http.HandleFunc("/post", trace(testPOSTHandler))
+ 	http.HandleFunc("/redirect", trace(testRedirectHandler))
+ 	http.HandleFunc("/redirected", trace(redirectedHandler))
++	http.HandleFunc("/slow", trace(slowHandler))
+ 	log.Fatal(http.ListenAndServe(":4711", nil))
+ }
+ 
+@@ -153,3 +155,12 @@ func testRedirectHandler(w http.ResponseWriter, _ *http.Request) {
+ func redirectedHandler(w http.ResponseWriter, _ *http.Request) {
+ 	w.Write([]byte("Redirected"))
+ }
++
++func slowHandler(w http.ResponseWriter, _ *http.Request) {
++	w.Write([]byte("first"))
++	if flusher, ok := w.(http.Flusher); ok {
++		flusher.Flush()
++	}
++	time.Sleep(5 * time.Second)
++	w.Write([]byte("second"))
++}
+diff --git a/testrig/test.c b/testrig/test.c
+index 3122e3b..fed1af6 100644
+--- a/testrig/test.c
++++ b/testrig/test.c
+@@ -4,6 +4,10 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
++#ifndef _WIN32
++#include <pthread.h>
++#endif
++
+ #if __ANDROID__
+ #include <android/log.h>
+ #define LOG(...) ((void)__android_log_print(ANDROID_LOG_INFO, "naett", __VA_ARGS__))
+@@ -174,6 +178,164 @@ int runRedirectTest(const char* endpoint) {
+     return 1;
+ }
+ 
++int runCancelTest(const char* endpoint) {
++    trace(__func__, "begin");
++
++    char testURL[512];
++    snprintf(testURL, sizeof(testURL), "%s/slow", endpoint);
++
++    naettReq* req = naettRequest(testURL, naettMethod("GET"));
++    if (req == NULL) {
++        return fail(__func__, "Failed to create request");
++    }
++
++    naettRes* res = naettMake(req);
++    if (res == NULL) {
++        return fail(__func__, "Failed to make request");
++    }
++
++    for (int i = 0; i < 2000; i++) {
++        int totalSize = 0;
++        if (naettGetTotalBytesRead(res, &totalSize) > 0) {
++            break;
++        }
++        usleep(1 * 1000);
++    }
++
++    naettCancel(res);
++    naettCancel(res);
++
++    int completed = 0;
++    for (int i = 0; i < 2000; i++) {
++        if (naettComplete(res)) {
++            completed = 1;
++            break;
++        }
++        usleep(1 * 1000);
++    }
++
++    if (!completed) {
++        return fail(__func__, "Cancel did not complete in time");
++    }
++
++    if (naettGetStatus(res) != naettCancelled) {
++        LOG("Expected status %d, got %d\n", naettCancelled, naettGetStatus(res));
++        return fail(__func__, "Expected naettCancelled");
++    }
++
++    int bodyLength = 0;
++    naettGetBody(res, &bodyLength);
++    LOG("%s: received %d body bytes before cancel\n", __func__, bodyLength);
++
++    naettClose(res);
++    naettFree(req);
++
++    trace(__func__, "end");
++
++    return 1;
++}
++
++int runCancelAfterCompleteTest(const char* endpoint) {
++    trace(__func__, "begin");
++
++    char testURL[512];
++    snprintf(testURL, sizeof(testURL), "%s/get", endpoint);
++
++    naettReq* req = naettRequest(testURL, naettMethod("GET"), naettHeader("accept", "naett/testresult"));
++    if (req == NULL) {
++        return fail(__func__, "Failed to create request");
++    }
++
++    naettRes* res = naettMake(req);
++    if (res == NULL) {
++        return fail(__func__, "Failed to make request");
++    }
++
++    while (!naettComplete(res)) {
++        usleep(100 * 1000);
++    }
++
++    int status = naettGetStatus(res);
++    naettCancel(res);
++    if (naettGetStatus(res) != status) {
++        LOG("Status changed from %d to %d\n", status, naettGetStatus(res));
++        return fail(__func__, "Cancel after completion changed the status");
++    }
++
++    naettClose(res);
++    naettFree(req);
++
++    trace(__func__, "end");
++
++    return 1;
++}
++
++#ifndef _WIN32
++
++static void* cancelThread(void* data) {
++    naettCancel((naettRes*)data);
++    return NULL;
++}
++
++int runCancelThreadTest(const char* endpoint) {
++    trace(__func__, "begin");
++
++    char testURL[512];
++    snprintf(testURL, sizeof(testURL), "%s/slow", endpoint);
++
++    naettReq* req = naettRequest(testURL, naettMethod("GET"));
++    if (req == NULL) {
++        return fail(__func__, "Failed to create request");
++    }
++
++    naettRes* res = naettMake(req);
++    if (res == NULL) {
++        return fail(__func__, "Failed to make request");
++    }
++
++    for (int i = 0; i < 2000; i++) {
++        int totalSize = 0;
++        if (naettGetTotalBytesRead(res, &totalSize) > 0) {
++            break;
++        }
++        usleep(1 * 1000);
++    }
++
++    pthread_t thread;
++    if (pthread_create(&thread, NULL, cancelThread, res) != 0) {
++        return fail(__func__, "Failed to start cancel thread");
++    }
++
++    int completed = 0;
++    for (int i = 0; i < 2000; i++) {
++        if (naettComplete(res)) {
++            completed = 1;
++            break;
++        }
++        usleep(1 * 1000);
++    }
++
++    pthread_join(thread, NULL);
++
++    if (!completed) {
++        return fail(__func__, "Cancel did not complete in time");
++    }
++
++    if (naettGetStatus(res) != naettCancelled) {
++        LOG("Expected status %d, got %d\n", naettCancelled, naettGetStatus(res));
++        return fail(__func__, "Expected naettCancelled");
++    }
++
++    naettClose(res);
++    naettFree(req);
++
++    trace(__func__, "end");
++
++    return 1;
++}
++
++#endif  // _WIN32
++
+ int runStressTest(const char* endpoint) {
+     trace(__func__, "begin");
+ 
+@@ -229,6 +391,17 @@ int runTests(const char* endpoint) {
+     if (!runRedirectTest(endpoint)) {
+         return 0;
+     }
++    if (!runCancelTest(endpoint)) {
++        return 0;
++    }
++    if (!runCancelAfterCompleteTest(endpoint)) {
++        return 0;
++    }
++#ifndef _WIN32
++    if (!runCancelThreadTest(endpoint)) {
++        return 0;
++    }
++#endif
+     if (!runStressTest(endpoint)) {
+         return 0;
+     }
